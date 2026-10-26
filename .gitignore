@@ -1,0 +1,5 @@
+# 可视化辅助 / 临时缓存
+.superpowers/
+
+# 本地 Claude 配置
+.claude/settings.local.json
