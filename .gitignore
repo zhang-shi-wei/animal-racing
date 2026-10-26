@@ -3,3 +3,6 @@
 
 # 本地 Claude 配置
 .claude/settings.local.json
+
+# 依赖
+node_modules/
