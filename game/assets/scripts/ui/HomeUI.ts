@@ -1,4 +1,4 @@
-import { Node, Vec3, Color, Label } from 'cc';
+import { Node, Vec3, Color } from 'cc';
 import { createLabel, createButton } from './UIHelper';
 import { CARS, type PlayerProgress } from '../core';
 
