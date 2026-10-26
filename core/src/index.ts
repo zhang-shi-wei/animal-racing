@@ -8,3 +8,5 @@ export type { EggState } from './logic/hatch';
 export { HABITAT_BONUS, habitatMultiplier, computeMultiplier } from './logic/traits';
 export type { Trait } from './logic/traits';
 export { computeFinalMaxSpeed, computeStars, computeRewards } from './logic/race';
+export { STAMINA_MAX, STAMINA_DRAIN, STAMINA_REGEN, DECEL_RATE, COAST_RATIO, createRaceSimState, step } from './logic/raceSimulator';
+export type { RaceSimState, RaceSimInput, RaceSimParams } from './logic/raceSimulator';
