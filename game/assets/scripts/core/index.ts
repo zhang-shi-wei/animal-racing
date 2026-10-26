@@ -1,0 +1,12 @@
+export * from './data/types';
+export { CARS } from './config/cars';
+export { LEVELS } from './config/levels';
+export { createDefaultProgress, serialize, deserialize } from './logic/save';
+export { MAX_LEVEL, upgradeCost, speedMultiplier, incomeMultiplier, canUpgrade, upgrade } from './logic/upgrade';
+export { HATCH_DURATION, eggState, rollCar } from './logic/hatch';
+export type { EggState } from './logic/hatch';
+export { HABITAT_BONUS, habitatMultiplier, computeMultiplier } from './logic/traits';
+export type { Trait } from './logic/traits';
+export { computeFinalMaxSpeed, computeStars, computeRewards } from './logic/race';
+export { STAMINA_MAX, STAMINA_DRAIN, STAMINA_REGEN, DECEL_RATE, COAST_RATIO, createRaceSimState, step } from './logic/raceSimulator';
+export type { RaceSimState, RaceSimInput, RaceSimParams } from './logic/raceSimulator';
