@@ -32,4 +32,23 @@ describe('race system', () => {
     const level = LEVELS[0];
     expect(Number.isInteger(computeRewards(level, 2, 1))).toBe(true);
   });
+
+  it('three stars when time equals first threshold', () => {
+    expect(computeStars(30, [30, 45])).toBe(3);
+  });
+
+  it('two stars when time equals second threshold', () => {
+    expect(computeStars(45, [30, 45])).toBe(2);
+  });
+
+  it('rewards are floored to integer', () => {
+    const level = LEVELS[1]; // coins 150
+    // 3 星 ×1.5, level 2 收益 ×1.05 => 150 * 1.5 * 1.05 = 236.25 -> floor 236
+    expect(computeRewards(level, 3, 2)).toBe(236);
+  });
+
+  it('applies trait multiplier to final max speed', () => {
+    // baseSpeed 100, level 3 => ×1.1, trait 1.2 => 132
+    expect(computeFinalMaxSpeed(100, 3, 1.2)).toBeCloseTo(132);
+  });
 });
