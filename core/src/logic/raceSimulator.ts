@@ -38,6 +38,7 @@ export function step(
   let speed = state.speed;
   let stamina = state.stamina;
 
+  const wasEmpty = stamina <= 0;
   const accelerating = input.accelerating && stamina > 0;
 
   if (accelerating) {
@@ -48,7 +49,7 @@ export function step(
     if (!input.accelerating) {
       stamina = clamp(stamina + STAMINA_REGEN * dt, 0, STAMINA_MAX);
     }
-    if (stamina <= 0) {
+    if (wasEmpty) {
       speed = Math.min(speed, maxSpeed * COAST_RATIO);
     }
   }

@@ -79,4 +79,14 @@ describe('race simulator', () => {
     const released = step(s, { accelerating: false }, 1, params);
     expect(released.stamina).toBeCloseTo(STAMINA_REGEN);
   });
+
+  it('released at zero stamina caps speed to coast ratio', () => {
+    let s = createRaceSimState();
+    for (let i = 0; i < 5; i++) s = step(s, { accelerating: true }, 1, params);
+    expect(s.stamina).toBe(0);
+    expect(s.speed).toBeCloseTo(params.maxSpeed);
+    const released = step(s, { accelerating: false }, 1, params);
+    expect(released.speed).toBeCloseTo(params.maxSpeed * COAST_RATIO);
+    expect(released.stamina).toBeCloseTo(STAMINA_REGEN);
+  });
 });
