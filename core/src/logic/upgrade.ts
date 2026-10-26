@@ -1,15 +1,18 @@
 export const MAX_LEVEL = 10;
 
+const UPGRADE_BASE_COST = 100;
+const LEVEL_BONUS = 0.05;
+
 export function upgradeCost(level: number): number {
-  return 100 * level;
+  return UPGRADE_BASE_COST * level;
 }
 
 export function speedMultiplier(level: number): number {
-  return 1 + (level - 1) * 0.05;
+  return 1 + (level - 1) * LEVEL_BONUS;
 }
 
 export function incomeMultiplier(level: number): number {
-  return 1 + (level - 1) * 0.05;
+  return 1 + (level - 1) * LEVEL_BONUS;
 }
 
 export function canUpgrade(level: number, coins: number): boolean {

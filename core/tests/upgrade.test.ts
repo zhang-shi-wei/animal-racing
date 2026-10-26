@@ -30,4 +30,9 @@ describe('upgrade system', () => {
     const result = upgrade({ coins: 500, level: 1 });
     expect(result).toEqual({ coins: 400, level: 2 });
   });
+
+  it('upgrade throws on invalid upgrade', () => {
+    expect(() => upgrade({ coins: 50, level: 1 })).toThrow();
+    expect(() => upgrade({ coins: 99999, level: MAX_LEVEL })).toThrow();
+  });
 });
