@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { createTrackRuntimeState, step, type TrackParams, type TrackRuntimeState } from '../src/logic/trackSim';
 import type { TrackDefinition } from '../src/data/types';
+import { TRACKS } from '../src/config/tracks';
 
 function makeTrack(overrides: Partial<TrackDefinition> = {}): TrackDefinition {
   return {
@@ -166,5 +167,28 @@ describe('track simulator 圈数', () => {
       rt = step(rt, { steer: 0, boosting: false }, 0.2, baseParams, track);
     }
     expect(rt.car.lap).toBe(3);
+  });
+});
+
+function polylineLength(points: { x: number; y: number }[]): number {
+  let len = 0;
+  for (let i = 1; i < points.length; i++) {
+    const dx = points[i].x - points[i - 1].x;
+    const dy = points[i].y - points[i - 1].y;
+    len += Math.sqrt(dx * dx + dy * dy);
+  }
+  return len;
+}
+
+describe('track simulator 近路', () => {
+  it('近路入口墙引用有效,且路径短于整圈', () => {
+    const track = TRACKS[0];
+    const shortcut = track.shortcuts[0];
+    const wall = track.breakableWalls.find((w) => w.id === shortcut.entranceWallId);
+    expect(wall).toBeDefined();
+    const loopLength = 2 * (track.shape.outerWidth + track.shape.outerHeight);
+    const pathLength = polylineLength(shortcut.path);
+    expect(pathLength).toBeGreaterThan(0);
+    expect(pathLength).toBeLessThan(loopLength);
   });
 });
