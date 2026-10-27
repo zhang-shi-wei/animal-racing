@@ -142,3 +142,29 @@ describe('track simulator 碰撞', () => {
     expect(rt.wallDurability['w']).toBe(0);
   });
 });
+
+describe('track simulator 圈数', () => {
+  it('正向穿过起跑线 lap++,反向不记', () => {
+    const track = makeTrack();
+    let rt = createTrackRuntimeState(track, baseParams); // (0,-80)
+    rt.car.x = -10;
+    rt.car.angle = 0;
+    rt = step(rt, { steer: 0, boosting: false }, 0.2, baseParams, track); // +x 穿过 x=0
+    expect(rt.car.lap).toBe(1);
+    rt.car.x = 10;
+    rt.car.angle = Math.PI;
+    rt = step(rt, { steer: 0, boosting: false }, 0.2, baseParams, track); // -x 反向穿过
+    expect(rt.car.lap).toBe(1);
+  });
+
+  it('反复正向穿过累计到设定圈数', () => {
+    const track = makeTrack({ laps: 3 });
+    let rt = createTrackRuntimeState(track, baseParams);
+    for (let i = 0; i < 3; i++) {
+      rt.car.x = -10;
+      rt.car.angle = 0;
+      rt = step(rt, { steer: 0, boosting: false }, 0.2, baseParams, track);
+    }
+    expect(rt.car.lap).toBe(3);
+  });
+});

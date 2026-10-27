@@ -77,9 +77,24 @@ export function step(
   const wallResult = collideBreakableWalls(car, wallDurability, track.breakableWalls, params);
   car = wallResult.car;
 
+  // 5. 圈数
+  if (crossedStartLine(prevX, prevY, car.x, car.y, track.startLine)) {
+    car.lap += 1;
+  }
+
+  // 6. 时间
   car.time += dt;
 
   return { car, wallDurability: wallResult.wallDurability };
+}
+
+function sideOfLine(px: number, py: number, line: Segment): number {
+  const cross = (line.x2 - line.x1) * (py - line.y1) - (line.y2 - line.y1) * (px - line.x1);
+  return Math.sign(cross);
+}
+
+function crossedStartLine(prevX: number, prevY: number, x: number, y: number, line: Segment): boolean {
+  return sideOfLine(prevX, prevY, line) < 0 && sideOfLine(x, y, line) >= 0;
 }
 
 const WALL_THICKNESS = 6; // 可破坏墙碰撞半厚(点到线段距离阈值)
