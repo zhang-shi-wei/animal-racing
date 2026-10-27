@@ -69,3 +69,30 @@ export function createButton(
   node.setPosition(position);
   return node;
 }
+
+export function createHoldButton(
+  parent: Node,
+  text: string,
+  position: Vec3,
+  width: number,
+  height: number,
+  onDown: () => void,
+  onUp: () => void,
+): Node {
+  const node = createNode('holdButton', parent);
+  const uiTransform = node.addComponent(UITransform);
+  uiTransform.setContentSize(width, height);
+
+  const g = node.addComponent(Graphics);
+  g.fillColor = new Color(80, 160, 90);
+  g.rect(-width / 2, -height / 2, width, height);
+  g.fill();
+
+  createLabel(node, text, Vec3.ZERO, 26, Color.WHITE);
+
+  node.on(Node.EventType.TOUCH_START, (e) => { e.propagationStopped = true; onDown(); });
+  node.on(Node.EventType.TOUCH_END, (e) => { e.propagationStopped = true; onUp(); });
+  node.on(Node.EventType.TOUCH_CANCEL, (e) => { e.propagationStopped = true; onUp(); });
+  node.setPosition(position);
+  return node;
+}
