@@ -1,4 +1,3 @@
-import type { Level } from '../data/types';
 import { speedMultiplier, incomeMultiplier } from './upgrade';
 
 export function computeFinalMaxSpeed(baseSpeed: number, level: number, traitMultiplier: number): number {
@@ -17,6 +16,6 @@ const STAR_COIN_MULTIPLIER: Record<number, number> = {
   1: 1.0,
 };
 
-export function computeRewards(level: Level, stars: number, carLevel: number): number {
-  return Math.floor(level.rewards.coins * STAR_COIN_MULTIPLIER[stars] * incomeMultiplier(carLevel));
+export function computeRewards(track: { rewards: { coins: number } }, stars: number, carLevel: number): number {
+  return Math.floor(track.rewards.coins * STAR_COIN_MULTIPLIER[stars] * incomeMultiplier(carLevel));
 }
