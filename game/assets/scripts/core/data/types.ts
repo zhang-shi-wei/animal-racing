@@ -45,3 +45,61 @@ export interface PlayerProgress {
   eggs: Egg[];
   unlockedLevel: number;
 }
+
+export interface Segment { x1: number; y1: number; x2: number; y2: number; }
+export interface Point { x: number; y: number; }
+
+export interface TrackShape {
+  type: 'rounded-rect';
+  centerX: number;
+  centerY: number;
+  outerWidth: number;
+  outerHeight: number;
+  trackWidth: number;
+  cornerRadius: number;
+}
+
+export type ObstacleKind = 'puddle' | 'rock';
+
+export interface PlacedObstacle {
+  id: string;
+  x: number;
+  y: number;
+  radius: number;
+  kind: ObstacleKind;
+  slowdown: number;
+}
+
+export interface PlacedBreakableWall {
+  id: string;
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+  durability: number;
+  breakSpeed: number;
+}
+
+export type ShortcutType = 'diagonal' | 'inner-loop' | 'branch';
+
+export interface Shortcut {
+  id: string;
+  type: ShortcutType;
+  entranceWallId: string;
+  path: Point[];
+  width: number;
+}
+
+export interface TrackDefinition {
+  id: string;
+  name: string;
+  scene: SceneType;
+  shape: TrackShape;
+  obstacles: PlacedObstacle[];
+  breakableWalls: PlacedBreakableWall[];
+  shortcuts: Shortcut[];
+  startLine: Segment;
+  laps: number;
+  starTime: [number, number];
+  rewards: { coins: number; eggDropRate: number };
+}
