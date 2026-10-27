@@ -62,9 +62,25 @@ export class TrackRenderer {
 
     const g = this.carGraphics;
     g.clear();
+
+    // 车身主体(圆角矩形)
     g.fillColor = new Color(230, 120, 120);
-    g.rect(-15, -10, 30, 20);
+    g.roundRect(-12, -9, 22, 18, 4);
     g.fill();
+
+    // 车头三角箭头(指向 +x,即前进方向)
+    g.fillColor = new Color(200, 80, 80);
+    g.moveTo(20, 0);
+    g.lineTo(10, -9);
+    g.lineTo(10, 9);
+    g.close();
+    g.fill();
+
+    // 前挡风玻璃(车头方向亮色)
+    g.fillColor = new Color(180, 230, 255, 220);
+    g.roundRect(8, -5, 6, 10, 2);
+    g.fill();
+
     if (boosting) {
       g.fillColor = new Color(255, 180, 60);
       g.rect(-30, -6, 15, 12); // 车尾火苗(局部 -x)
