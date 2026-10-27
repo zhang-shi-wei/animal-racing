@@ -78,3 +78,67 @@ describe('track simulator 核心', () => {
     expect(rt.car.nitro).toBeCloseTo(100);
   });
 });
+
+describe('track simulator 碰撞', () => {
+  it('撞外墙镜像反弹 ×0.6', () => {
+    const track = makeTrack();
+    let rt = createTrackRuntimeState(track, baseParams);
+    rt.car.x = 0;
+    rt.car.y = -90;
+    rt.car.angle = -Math.PI / 2; // 朝 -y 撞外墙
+    rt = step(rt, { steer: 0, boosting: false }, 0.5, baseParams, track);
+    expect(rt.car.angle).toBeCloseTo(Math.PI / 2); // 反弹向上
+    expect(rt.car.speed).toBeCloseTo(80 * 0.6);
+  });
+
+  it('撞内墙镜像反弹', () => {
+    const track = makeTrack();
+    let rt = createTrackRuntimeState(track, baseParams);
+    rt.car.x = 0;
+    rt.car.y = -70;
+    rt.car.angle = Math.PI / 2; // 朝 +y 撞内墙
+    rt = step(rt, { steer: 0, boosting: false }, 0.5, baseParams, track);
+    expect(rt.car.angle).toBeCloseTo(-Math.PI / 2); // 反弹向下
+    expect(rt.car.speed).toBeCloseTo(80 * 0.6);
+  });
+
+  it('进入障碍半径速度压到 defaultSpeed×slowdown', () => {
+    const track = makeTrack({
+      obstacles: [{ id: 'o', x: 50, y: -80, radius: 15, kind: 'puddle', slowdown: 0.3 }],
+    });
+    let rt = createTrackRuntimeState(track, baseParams);
+    rt.car.x = 50;
+    rt.car.y = -80;
+    rt = step(rt, { steer: 0, boosting: false }, 0.1, baseParams, track);
+    expect(rt.car.speed).toBeCloseTo(80 * 0.3);
+  });
+
+  it('速度≥breakSpeed 一次撞破', () => {
+    const track = makeTrack({
+      breakableWalls: [{ id: 'w', x1: 50, y1: -100, x2: 50, y2: -60, durability: 5, breakSpeed: 120 }],
+    });
+    let rt = createTrackRuntimeState(track, baseParams);
+    rt.car.x = 45;
+    rt.car.y = -80;
+    rt.car.angle = 0;
+    rt = step(rt, { steer: 0, boosting: true }, 0.01, baseParams, track); // 140 ≥ 120
+    expect(rt.wallDurability['w']).toBe(0);
+  });
+
+  it('低速撞耐久-1并反弹,归0破', () => {
+    const track = makeTrack({
+      breakableWalls: [{ id: 'w', x1: 50, y1: -100, x2: 50, y2: -60, durability: 2, breakSpeed: 120 }],
+    });
+    let rt = createTrackRuntimeState(track, baseParams);
+    rt.car.x = 45;
+    rt.car.y = -80;
+    rt.car.angle = 0;
+    rt = step(rt, { steer: 0, boosting: false }, 0.01, baseParams, track); // 80 < 120
+    expect(rt.wallDurability['w']).toBe(1);
+    expect(rt.car.angle).toBeCloseTo(Math.PI); // 反弹朝 -x
+    rt.car.x = 45;
+    rt.car.angle = 0;
+    rt = step(rt, { steer: 0, boosting: false }, 0.01, baseParams, track);
+    expect(rt.wallDurability['w']).toBe(0);
+  });
+});
